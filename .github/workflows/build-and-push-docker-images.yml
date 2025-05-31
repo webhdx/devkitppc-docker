@@ -13,8 +13,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        name:
+        image:
           - devkitppc
           - devkitppc-libogc2
           - swiss-gc
@@ -36,13 +37,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKER_USERNAME }}/${{ matrix.name }}
+          images: ${{ secrets.DOCKER_USERNAME }}/${{ matrix.image }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile.${{ matrix.name }}
+          file: Dockerfile.${{ matrix.image }}
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
