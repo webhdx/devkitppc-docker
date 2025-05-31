@@ -1,0 +1,28 @@
+FROM devkitpro/devkitppc
+
+ARG TARGETARCH
+ARG VERSION
+ARG BUILD_DATE
+ARG VCS_REF
+
+LABEL maintainer="Maciej Kobus <webhdx@gmail.com>" \
+      org.opencontainers.image.title="DevkitPPC Development Environment" \
+      org.opencontainers.image.description="GameCube/Wii development environment with DevkitPPC" \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.revision="${VCS_REF}"
+
+ENV PATH=${DEVKITPPC}/bin:$PATH
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends bc ccache && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD powerpc-eabi-gcc --version || exit 1
+
+ENTRYPOINT ["bash"]
+CMD ["/entrypoint.sh"]

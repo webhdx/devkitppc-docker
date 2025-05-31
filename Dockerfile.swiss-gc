@@ -1,0 +1,38 @@
+FROM webhdx/devkitppc-libogc2:latest
+
+ARG TARGETARCH
+ARG VERSION
+ARG BUILD_DATE
+ARG VCS_REF
+
+LABEL org.opencontainers.image.title="Swiss Development Environment" \
+      org.opencontainers.image.description="Development environment for Swiss (GC/Wii), including libogc2 and required tools" \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.revision="${VCS_REF}"
+
+RUN dpkg --add-architecture i386 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gcc \
+        gcc-mingw-w64-i686 \
+        libc6-dev \
+        p7zip-full \
+        xorriso \
+        libc6:i386 \
+        $([ "$TARGETARCH" = "arm64" ] && echo "binfmt-support qemu-user-static llvm") && \
+    if [ "$TARGETARCH" = "arm64" ]; then \
+        echo ':qemu-i386:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x03\x00:\xff\xff\xff\xff\xff\xfe\xfe\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-i386-static:F' > /proc/sys/fs/binfmt_misc/register 2>/dev/null || true; \
+        rm -f /usr/bin/strip && \
+        ln -s /usr/bin/llvm-strip /usr/bin/strip; \
+    fi && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN dkp-pacman -S --noconfirm --ask 4 \
+        gamecube-tools-git \
+        ppc-libdeflate \
+        ppc-libmad \
+        ppc-libpsoarchive \
+        ppc-libxxhash \
+        ppc-zlib-ng-compat && \
+    dkp-pacman -Scc --noconfirm

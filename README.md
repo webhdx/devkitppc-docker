@@ -1,35 +1,70 @@
-# DevkitPPC Docker Images
+# GameCube/Wii Docker Development Environment
 
-Docker images for Wii/GameCube homebrew development. My images are based on [devkitpro/devkitppc](https://hub.docker.com/r/devkitpro/devkitppc) image with the addition of cccache. 
+Docker images for GameCube/Wii homebrew development. These images are based on the official [devkitpro/devkitppc](https://hub.docker.com/r/devkitpro/devkitppc) image with additional tools and optimizations.
 
-* `webhdx/devkitppc-libogc2`, it comes with libogc2 compiled in. Great for developing [iplboot](https://github.com/redolution/iplboot) or Swiss although it requires installing additional dependencies.
+## Available Images
 
-All images are currently only compiled for arm64 architecture. In the future I plan to move updating the images to CI and also enable cross compilation for x86 arch.
+- **`webhdx/devkitppc`** - Based on devkitpro/devkitppc, adds ccache support for faster project builds
+- **`webhdx/devkitppc-libogc2`** - Additionally installs libogc2 (recommended image for new homebrew projects)
+- **`webhdx/swiss-gc`** - Contains additional tools required for building Swiss
 
-## How to use?
+## Building Images
 
-Pull the image:
 ```bash
-docker pull webhdx/devkitppc-libogc2
+docker build -f Dockerfile.devkitppc -t webhdx/devkitppc:latest .
+docker build -f Dockerfile.devkitppc-libogc2 -t webhdx/devkitppc-libogc2:latest .
+docker build -f Dockerfile.swiss-gc -t webhdx/devkitppc-swiss-gc:latest .
 ```
 
-Add below aliases to your shell for convenience:
+## Usage
+
+### Shell Aliases (Recommended)
+
+Add these aliases to your shell configuration for convenient usage:
+
 ```bash
-alias gcrunmake='docker run --rm -d -v "$(pwd):/src" --entrypoint /bg.sh -t --name devkitppc-libogc2 webhdx/devkitppc-libogc2'
-alias gcmake='docker exec -t devkitppc-libogc2 /run.sh'
+# For libogc development
+alias mmake='docker run --rm -it -v "$(pwd):/src" webhdx/devkitppc'
+
+# For libogc2 development
+alias mmake='docker run --rm -it -v "$(pwd):/src" webhdx/devkitppc-libogc2'
+
+# For Swiss development
+alias swissmake='docker run --rm -it -v "$(pwd):/src" webhdx/devkitppc-libogc2'
 ```
 
-Spin up the container:
+### Basic Usage
+
+Inside your project directory (where `Makefile` is located), run command alias:
+
 ```bash
-gcrunmake
+mmake       # makes default target
+mmake clean # makes target named "clean" 
 ```
 
-Now you can compile the project by running below command in the main project directory:
+### Direct Docker Usage
+
 ```bash
-gcmake install # or whatever target from Makefile you'd like to run
+# One-time build, runs make with default target
+docker run --rm -v "$(pwd):/src" webhdx/devkitppc-libogc2
+
+# Interactive development
+docker run --rm -it -v "$(pwd):/src" webhdx/devkitppc-libogc2 -s bash
 ```
+
+## ccache Support
+
+All images include ccache for faster compilation. It's disabled by default. Control it with the `USE_CCACHE` environment variable:
+
+```bash
+# Enable ccache (recommended)
+docker run --rm -v "$(pwd):/src" -e USE_CCACHE=1 webhdx/devkitppc-libogc2
+```
+
+When enabled, ccache stores compilation cache in `.ccache/` directory and displays build statistics after compilation.
 
 ## Acknowledgements
+
 Based on:
-* https://github.com/devkitPro/docker
-* https://github.com/nachoparker/mmake
+- [devkitPro Docker](https://github.com/devkitPro/docker)
+- [mmake](https://github.com/nachoparker/mmake)

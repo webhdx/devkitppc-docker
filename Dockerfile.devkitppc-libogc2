@@ -1,0 +1,22 @@
+FROM webhdx/devkitppc:latest
+
+ARG TARGETARCH
+ARG VERSION
+ARG BUILD_DATE
+ARG VCS_REF
+
+LABEL org.opencontainers.image.title="DevkitPPC and libogc2 Development Environment" \
+      org.opencontainers.image.description="GameCube/Wii development environment with DevkitPPC and libogc2" \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.revision="${VCS_REF}"
+
+RUN dkp-pacman-key --recv-keys C8A2759C315CFBC3429CC2E422B803BA8AA3D7CE --keyserver keyserver.ubuntu.com && \
+    dkp-pacman-key --lsign-key C8A2759C315CFBC3429CC2E422B803BA8AA3D7CE && \
+    sed -i '/^\[dkp-libs\]$/,$d' /opt/devkitpro/pacman/etc/pacman.conf && \
+    printf '[extremscorner-devkitpro]\nServer = https://packages.extremscorner.org/devkitpro/linux/$arch\n' >> /opt/devkitpro/pacman/etc/pacman.conf && \
+    dkp-pacman -Sy && \
+    dkp-pacman -S --noconfirm --ask 4 \
+        libogc2-git \
+        libogc2-libdvm-git && \
+    dkp-pacman -Scc --noconfirm
