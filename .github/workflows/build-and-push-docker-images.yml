@@ -39,15 +39,6 @@ jobs:
         id: calver
         run: echo "tag=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
 
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ secrets.DOCKER_USERNAME }}/${{ matrix.image }}
-          tags: |
-            type=raw,value=latest,enable={{is_default_branch}},priority=200
-            type=raw,value=${{ steps.calver.outputs.tag }},enable={{is_default_branch}},priority=300
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
@@ -55,7 +46,12 @@ jobs:
           file: Dockerfile.${{ matrix.image }}
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            webhdx/${{ matrix.image }}:latest
+            webhdx/${{ matrix.image }}:${{ steps.calver.outputs.tag }}
+          labels: |
+            org.opencontainers.image.version=${{ steps.calver.outputs.tag }}
+            org.opencontainers.image.created=$(date -u +'%Y-%m-%dT%H:%M:%S.%3NZ')
+            org.opencontainers.image.revision=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
