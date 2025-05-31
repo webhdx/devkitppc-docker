@@ -45,8 +45,8 @@ jobs:
         with:
           images: ${{ secrets.DOCKER_USERNAME }}/${{ matrix.image }}
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=raw,value=${{ steps.calver.outputs.tag }},enable={{is_default_branch}}
+            type=raw,value=latest,enable={{is_default_branch}},priority=200
+            type=raw,value=${{ steps.calver.outputs.tag }},enable={{is_default_branch}},priority=300
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6

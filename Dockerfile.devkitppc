@@ -1,16 +1,10 @@
 FROM devkitpro/devkitppc
 
 ARG TARGETARCH
-ARG VERSION
-ARG BUILD_DATE
-ARG VCS_REF
 
 LABEL maintainer="Maciej Kobus <webhdx@gmail.com>" \
       org.opencontainers.image.title="DevkitPPC Development Environment" \
-      org.opencontainers.image.description="GameCube/Wii development environment with DevkitPPC" \
-      org.opencontainers.image.version="${VERSION}" \
-      org.opencontainers.image.created="${BUILD_DATE}" \
-      org.opencontainers.image.revision="${VCS_REF}"
+      org.opencontainers.image.description="GameCube/Wii development environment with DevkitPPC"
 
 ENV PATH=${DEVKITPPC}/bin:$PATH
 
