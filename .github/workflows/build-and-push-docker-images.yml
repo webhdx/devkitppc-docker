@@ -2,8 +2,8 @@ name: Build and push Docker images
 
 on:
   schedule:
-    # Run workflow on the first day of every month at midnight (00:00)
-    - cron: '0 0 1 * *'
+    # Run workflow every Monday at midnight (00:00)
+    - cron: '0 0 * * 1'
   push:
     branches: ["main"]
   pull_request:

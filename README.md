@@ -8,6 +8,13 @@ Docker images for GameCube/Wii homebrew development. These images are based on t
 - **`webhdx/devkitppc-libogc2`** - Additionally installs libogc2 (recommended image for new homebrew projects)
 - **`webhdx/swiss-gc`** - Contains additional tools required for building Swiss
 
+## Image Versioning
+
+Images are automatically built every week on Monday.
+
+- **`latest`** - Always points to the most recent build
+- **CalVer tags** - Date-based versioning using format `YYYYMMDD` (e.g., `20250531`)
+
 ## Building Images
 
 ```bash
