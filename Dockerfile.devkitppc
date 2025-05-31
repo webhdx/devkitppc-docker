@@ -10,7 +10,8 @@ ENV PATH=${DEVKITPPC}/bin:$PATH
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends bc ccache && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    git config --global --add safe.directory /src
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
