@@ -13,7 +13,7 @@ Docker images for GameCube/Wii homebrew development. These images are based on t
 Images are automatically built every week on Monday.
 
 - **`latest`** - Always points to the most recent build
-- **CalVer tags** - Date-based versioning using format `YYYYMMDD` (e.g., `20250531`)
+- **CalVer tags** - Date-based versioning using format `YYYYMMDD` (e.g. `20250531`)
 
 ## Building Images
 
