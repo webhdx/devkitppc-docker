@@ -20,7 +20,7 @@ Images are automatically built every week on Monday.
 ```bash
 docker build -f Dockerfile.devkitppc -t webhdx/devkitppc:latest .
 docker build -f Dockerfile.devkitppc-libogc2 -t webhdx/devkitppc-libogc2:latest .
-docker build -f Dockerfile.swiss-gc -t webhdx/devkitppc-swiss-gc:latest .
+docker build -f Dockerfile.swiss-gc -t webhdx/swiss-gc:latest .
 ```
 
 ## Usage
@@ -37,7 +37,7 @@ alias mmake='docker run --rm -it -v "$(pwd):/src" webhdx/devkitppc'
 alias mmake='docker run --rm -it -v "$(pwd):/src" webhdx/devkitppc-libogc2'
 
 # For Swiss development
-alias swissmake='docker run --rm -it -v "$(pwd):/src" webhdx/devkitppc-libogc2'
+alias swissmake='docker run --rm -it -v "$(pwd):/src" webhdx/swiss-gc'
 ```
 
 ### Basic Usage
