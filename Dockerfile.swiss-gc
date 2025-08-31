@@ -6,6 +6,7 @@ LABEL org.opencontainers.image.title="Swiss Development Environment" \
       org.opencontainers.image.description="Development environment for Swiss (GC/Wii), including libogc2 and required tools"
 
 RUN dpkg --add-architecture i386 && \
+    rm /etc/apt/sources.list.d/devkitpro.list && \    
     apt-get update && \
     apt-get install -y --no-install-recommends \
         gcc \
