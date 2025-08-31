@@ -22,11 +22,14 @@ RUN dpkg --add-architecture i386 && \
     fi && \
     rm -rf /var/lib/apt/lists/*
 
-RUN dkp-pacman -S --noconfirm --ask 4 \
-        gamecube-tools-git \
-        ppc-libdeflate \
-        ppc-libmad \
-        ppc-libpsoarchive \
-        ppc-libxxhash \
-        ppc-zlib-ng-compat && \
-    dkp-pacman -Scc --noconfirm
+RUN dkp-pacman --sync --noconfirm --ask 4 \
+    devkitppc-licenses \
+    gamecube-tools-git \
+    libogc2-git \
+    libogc2-libdvm-git \
+    ppc-libdeflate \
+    ppc-libmad \
+    ppc-libpsoarchive \
+    ppc-libxxhash \
+    ppc-zlib-ng-compat && \
+    dkp-pacman --sync --clean --noconfirm
