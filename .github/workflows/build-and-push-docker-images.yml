@@ -70,3 +70,5 @@ jobs:
           repository: webhdx/${{ matrix.image }}
           readme-filepath: ./README.md
           short-description: ${{ github.event.repository.description }}
+
+      - uses: gautamkrishnar/keepalive-workflow@v2
