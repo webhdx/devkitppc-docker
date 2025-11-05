@@ -9,8 +9,6 @@ on:
   pull_request:
     branches: ["main"]
   workflow_dispatch:
-permissions:
-  actions: write
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -73,11 +71,10 @@ jobs:
           readme-filepath: ./README.md
           short-description: ${{ github.event.repository.description }}
   
-  keepalive-job:
-    name: Keepalive Workflow
+  workflow-keepalive:
+    if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
     permissions:
       actions: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: gautamkrishnar/keepalive-workflow@v2
+      - uses: liskin/gh-workflow-keepalive@v1
